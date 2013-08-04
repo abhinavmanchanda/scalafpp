@@ -119,12 +119,20 @@ object Huffman {
    * unchanged.
    */
   def combine(trees: List[CodeTree]): List[CodeTree] = {
-	  if(trees.size <= 2) trees
+	  if(trees.size < 2) trees
 	  else {
 	    val tail = trees.tail
-	    makeCodeTree(trees.head, tail.head)::(tail.tail)
+	    val firstElementWeight = weightOfElement(trees.head)
+	    val secondElementWeight = weightOfElement(tail.head)
+	    val finalTreeHead = if(firstElementWeight<=secondElementWeight) makeCodeTree(trees.head, tail.head) else makeCodeTree(tail.head, trees.head)
+	    finalTreeHead::(tail.tail)
 	  }
     } 
+  
+  	private def weightOfElement(tree: CodeTree) = tree match {
+	      							case Fork(_,_,_,weight) => weight
+	      							case Leaf(_,weight) => weight
+  	}
 
   /**
    * This function will be called in the following way:

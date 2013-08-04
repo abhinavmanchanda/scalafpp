@@ -49,6 +49,7 @@ class HuffmanSuite extends FunSuite {
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4), Leaf('k', 5))
     assert(combine(leaflist) === List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), Leaf('k',5)))
     assert(combine(combine(leaflist)) == List(Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e','t','x'),7), Leaf('k',5)))
+    assert(combine(combine(combine(leaflist))) === List(Fork(Leaf('k',5), Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e','t','x'),7),List('k','e','t','x'),12)))
   }
 
   test("until") {
@@ -72,4 +73,5 @@ class HuffmanSuite extends FunSuite {
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
     }
   }
+
 }
