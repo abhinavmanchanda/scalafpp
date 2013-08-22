@@ -62,9 +62,15 @@ class HuffmanSuite extends FunSuite {
 	assert(createCodeTree(leaflist)=== Fork(Leaf('k',5), Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e','t','x'),7),List('k','e','t','x'),12))
   }
 
-  test("encode") {
-    val leaflist = List('k','x','k','t','e','t','k','x','k','x','k','x')
+  test("decode") {
     val tree = Fork(Leaf('k',5), Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e','t','x'),7),List('k','e','t','x'),12)
+    assert(decode(tree, List(1,0,1,1,1,0,1,0,1,1,0,0)) === List('t','x','k','t','e'))
+    
+  }
+
+  test("encode") {
+    val tree = Fork(Leaf('k',5), Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e','t','x'),7),List('k','e','t','x'),12)
+    assert(encode(tree)(List('t','x','k','t','e')) === List(1,0,1,1,1,0,1,0,1,1,0,0))
     
   }
 

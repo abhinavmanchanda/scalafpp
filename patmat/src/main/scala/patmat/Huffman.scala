@@ -172,8 +172,15 @@ object Huffman {
    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
    * the resulting list of characters.
    */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = decodeTraverse(tree, tree, bits, List())
 
+  private def decodeTraverse(tree: CodeTree, currentNode: CodeTree, remainingBits: List[Bit], aggregator: List[Char]): List[Char] = currentNode match {
+        case Leaf(char, _) => if(remainingBits.size == 0) aggregator++List(char) else decodeTraverse(tree, tree, remainingBits, aggregator ++ List(char))
+        case Fork(left, right, _, _) => {
+          val nextNode = if(remainingBits.head == 0) left else right
+          decodeTraverse(tree, nextNode, remainingBits.tail, aggregator)
+        }
+      }
   /**
    * A Huffman coding tree for the French language.
    * Generated from the data given at
@@ -190,7 +197,7 @@ object Huffman {
   /**
    * Write a function that returns the decoded secret
    */
-  def decodedSecret: List[Char] = ???
+  def decodedSecret: List[Char] = decode(frenchCode, secret)
 
 
 
@@ -200,7 +207,24 @@ object Huffman {
    * This function encodes `text` using the code tree `tree`
    * into a sequence of bits.
    */
-  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = encodeTraverse(tree, text, List())
+  
+  private def encodeTraverse(tree: CodeTree, remainingChars: List[Char], aggregator: List[Bit]): List[Bit] = {
+    if(remainingChars.isEmpty) aggregator
+    else encodeTraverse(tree, remainingChars.tail, aggregator ::: encodedValue(tree, remainingChars.head, List())) 
+  }
+  
+  private def encodedValue(tree: CodeTree, char: Char, aggregator:List[Bit]): List[Bit] = tree match{
+    case Leaf(char, _) => aggregator
+    case Fork(left, right, _, _) => {
+      if(isCharContained(left, char)) encodedValue (left, char, aggregator ++ List(0)) else encodedValue(right, char, aggregator ++ List(1)) 
+    }
+  }
+  
+  private def isCharContained(tree: CodeTree, charToFind: Char) = tree match {
+    case Leaf(char, _) => char == charToFind
+    case Fork(_,_,chars,_) => chars.contains(charToFind)
+  }
 
 
   // Part 4b: Encoding using code table
