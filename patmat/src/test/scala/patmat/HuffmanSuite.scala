@@ -12,6 +12,7 @@ class HuffmanSuite extends FunSuite {
   trait TestTrees {
     val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
     val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
+    val tree = Fork(Leaf('k',5), Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e','t','x'),7),List('k','e','t','x'),12)
   }
 
   test("weight of a larger tree") {
@@ -63,15 +64,15 @@ class HuffmanSuite extends FunSuite {
   }
 
   test("decode") {
-    val tree = Fork(Leaf('k',5), Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e','t','x'),7),List('k','e','t','x'),12)
-    assert(decode(tree, List(1,0,1,1,1,0,1,0,1,1,0,0)) === List('t','x','k','t','e'))
-    
+    new TestTrees {
+    	assert(decode(tree, List(1,0,1,1,1,0,1,0,1,1,0,0)) === List('t','x','k','t','e'))
+    }
   }
 
   test("encode") {
-    val tree = Fork(Leaf('k',5), Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e','t','x'),7),List('k','e','t','x'),12)
-    assert(encode(tree)(List('t','x','k','t','e')) === List(1,0,1,1,1,0,1,0,1,1,0,0))
-    
+     new TestTrees {
+    	 assert(encode(tree)(List('t','x','k','t','e')) === List(1,0,1,1,1,0,1,0,1,1,0,0))
+     }
   }
 
   test("decode and encode a very short text should be identity") {
@@ -95,5 +96,17 @@ class HuffmanSuite extends FunSuite {
     assert(mergedTable.contains(secondElement))
     assert(mergedTable.contains(thirdElement))
   }
+  
+  test("convert tree to code table") {
+     new TestTrees {
+       val codeTable = convert(t2)
+       assert(codeTable.size === 3)
+       assert(codeTable.contains(('a',List(0,0))))
+       assert(codeTable.contains(('b',List(0,1))))
+       assert(codeTable.contains(('d',List(1))))
+     }
+  }
+  
+  
 
 }
