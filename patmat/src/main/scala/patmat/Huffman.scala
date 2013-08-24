@@ -235,7 +235,7 @@ object Huffman {
    * This function returns the bit sequence that represents the character `char` in
    * the code table `table`.
    */
-  def codeBits(table: CodeTable)(char: Char): List[Bit] = ???
+  def codeBits(table: CodeTable)(char: Char): List[Bit] = table.filter(entry => entry._1 == char).head._2
 
   /**
    * Given a code tree, create a code table which contains, for every character in the
@@ -252,7 +252,7 @@ object Huffman {
    * use it in the `convert` method above, this merge method might also do some transformations
    * on the two parameter code tables.
    */
-  def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable = ???
+  def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable = a ::: b
 
   /**
    * This function encodes `text` according to the code tree `tree`.

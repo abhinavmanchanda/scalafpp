@@ -80,4 +80,20 @@ class HuffmanSuite extends FunSuite {
     }
   }
 
+  test("codeBits") {
+    val codedBits = codeBits(List(('a',List(0,0,1)),('b',List(1,1))))('b')
+    assert(codedBits === List(1,1))    
+  }
+
+  test("merge code tables") {
+    val firstElement = ('a',List(0,0,1))
+    val secondElement = ('b',List(1,1))
+    val thirdElement = ('x',List(0))
+    val mergedTable = mergeCodeTables(List(firstElement,secondElement), List(thirdElement))
+    assert(mergedTable.size === 3)
+    assert(mergedTable.contains(firstElement))
+    assert(mergedTable.contains(secondElement))
+    assert(mergedTable.contains(thirdElement))
+  }
+
 }
